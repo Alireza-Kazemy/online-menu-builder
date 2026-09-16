@@ -1,0 +1,161 @@
+// Data store for Café Arghavan with Persian & English support
+const DEFAULT_MENU_DATA = {
+  cafeInfo: {
+    nameFa: "کافه ارغوان",
+    nameEn: "Café Arghavan",
+    taglineFa: "لذت طعم اصیل ایرانی در کنار حال خوب",
+    taglineEn: "Authentic Persian Taste & Joyful Moments",
+    instagram: "@arghavansaray",
+    currencyFa: "تومان",
+    currencyEn: "Tomans"
+  },
+  categories: [
+    { id: "espresso_based", nameFa: "نوشیدنی‌های بر پایه اسپرسو", nameEn: "Espresso Based Drinks", icon: "☕" },
+    { id: "cold_drinks", nameFa: "نوشیدنی‌های سرد و سنتی", nameEn: "Cold Drinks", icon: "🍹" },
+    { id: "hot_food", nameFa: "غذاهای گرم و عصرانه", nameEn: "Hot Food & Bites", icon: "🍲" },
+    { id: "desserts", nameFa: "دسر و باقلوا", nameEn: "Desserts & Pastries", icon: "🍰" }
+  ],
+  items: [
+    // دسته نوشیدنی‌های بر پایه اسپرسو
+    {
+      id: "item-1",
+      categoryId: "espresso_based",
+      nameFa: "اسپرسو دبل ریسترتو",
+      nameEn: "Double Ristretto Espresso",
+      price: 85000,
+      ingredientsFa: "عصاره قهوه ۱۰۰٪ عربیکا، با فوم غلیظ و ماندگار",
+      ingredientsEn: "100% Arabica double shot extract with thick crema",
+      badgeFa: "پرفروش",
+      badgeEn: "Popular",
+      image: "https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?auto=format&fit=crop&w=400&q=80"
+    },
+    {
+      id: "item-2",
+      categoryId: "espresso_based",
+      nameFa: "لاته زعفران و هل",
+      nameEn: "Saffron & Cardamom Latte",
+      price: 125000,
+      ingredientsFa: "اسپرسو دبل، شیر پرچرب فوم‌دار، زعفران اعلا، هل تازه",
+      ingredientsEn: "Double espresso, steamed velvety milk, saffron, green cardamom",
+      badgeFa: "مخصوص ارغوان",
+      badgeEn: "Signature",
+      image: "https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=400&q=80"
+    },
+    {
+      id: "item-3",
+      categoryId: "espresso_based",
+      nameFa: "آمریکانو اصیل",
+      nameEn: "Classic Americano",
+      price: 90000,
+      ingredientsFa: "دو شات اسپرسو، آب جوش با دمای کنترل‌شده",
+      ingredientsEn: "Double shot espresso diluted with hot filtered water",
+      badgeFa: "",
+      badgeEn: "",
+      image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=400&q=80"
+    },
+    {
+      id: "item-4",
+      categoryId: "espresso_based",
+      nameFa: "کاپوچینو با دارچین",
+      nameEn: "Cardamom Cappuccino",
+      price: 110000,
+      ingredientsFa: "اسپرسو، شیر بخار داده شده، فوم متراکم، پودر دارچین",
+      ingredientsEn: "Espresso, steamed milk, dense foam, dusted cinnamon",
+      badgeFa: "",
+      badgeEn: "",
+      image: "https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&w=400&q=80"
+    },
+
+    // دسته نوشیدنی‌های سرد
+    {
+      id: "item-5",
+      categoryId: "cold_drinks",
+      nameFa: "شربت زعفران و بیدمشک",
+      nameEn: "Saffron Musk Willow Cooler",
+      price: 115000,
+      ingredientsFa: "عرق بیدمشک، عصاره زعفران قائنات، تخم شربتی، گلاب",
+      ingredientsEn: "Musk willow distillate, pure saffron, basil seeds, rosewater",
+      badgeFa: "خنک و سنتی",
+      badgeEn: "Classic Refreshing",
+      image: "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=400&q=80"
+    },
+    {
+      id: "item-6",
+      categoryId: "cold_drinks",
+      nameFa: "شربت سکنجبین خیار",
+      nameEn: "Mint Sekanjabin & Cucumber",
+      price: 95000,
+      ingredientsFa: "سکنجبین خانگی عسلی، خیار قلمی رنده‌شده، لیمو ترش تازه",
+      ingredientsEn: "Honey sekanjabin, fresh grated cucumber, lime juice, mint",
+      badgeFa: "دستور سنتی",
+      badgeEn: "Authentic",
+      image: "https://images.unsplash.com/photo-1556881286-fc6915169721?auto=format&fit=crop&w=400&q=80"
+    },
+    {
+      id: "item-7",
+      categoryId: "cold_drinks",
+      nameFa: "آیس لاته وانیلی",
+      nameEn: "Vanilla Iced Latte",
+      price: 130000,
+      ingredientsFa: "اسپرسو دوبل سرد، شیر سرد، سیروپ وانیل ماداگاسکار، یخ",
+      ingredientsEn: "Chilled double espresso, fresh cold milk, vanilla syrup, ice",
+      badgeFa: "",
+      badgeEn: "",
+      image: "https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=400&q=80"
+    },
+
+    // دسته غذاهای گرم
+    {
+      id: "item-8",
+      categoryId: "hot_food",
+      nameFa: "لقمه سنگک و پنیر لیقوان برشته",
+      nameEn: "Toasted Sangak & Aged Tabriz Cheese",
+      price: 135000,
+      ingredientsFa: "نان سنگک تنوری کنجدی، پنیر گوسفندی لیقوان، گردو، سبزی خوردن",
+      ingredientsEn: "Crisp sesame sangak, sheep feta, walnut kernels, fresh garden herbs",
+      badgeFa: "عصرانه محبوب",
+      badgeEn: "Traditional Bite",
+      image: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80"
+    },
+    {
+      id: "item-9",
+      categoryId: "hot_food",
+      nameFa: "تُست بوقلمون و پنیر گودای دودی",
+      nameEn: "Smoked Turkey & Melted Gouda Toast",
+      price: 165000,
+      ingredientsFa: "سینه بوقلمون دودی، پنیر گودا ذوب شده، نان بریوش، سس خردل ملایم",
+      ingredientsEn: "Smoked turkey breast, melted gouda, artisan brioche, mild mustard",
+      badgeFa: "گرم و برشته",
+      badgeEn: "Hot & Crisp",
+      image: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80"
+    },
+
+    // دسته دسر و باقلوا
+    {
+      id: "item-10",
+      categoryId: "desserts",
+      nameFa: "کیک باقلوایی زعفرانی با پسته",
+      nameEn: "Pistachio & Saffron Baklava Cake",
+      price: 120000,
+      ingredientsFa: "کیک نرم پسته رفسنجان، آغشته به شهد گلاب و هل و زعفران",
+      ingredientsEn: "Pistachio sponge soaked in rosewater, cardamom and saffron syrup",
+      badgeFa: "پیشنهاد باریستا",
+      badgeEn: "Recommended",
+      image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=400&q=80"
+    },
+    {
+      id: "item-11",
+      categoryId: "desserts",
+      nameFa: "چیزکیک سن‌سباستین با سس توت‌فرنگی",
+      nameEn: "San Sebastian Cheesecake",
+      price: 155000,
+      ingredientsFa: "چیزکیک سوخته اسپانیایی با بافت کرمی، سس توت‌فرنگی تازه دست‌ساز",
+      ingredientsEn: "Burnt basque cheesecake with creamy center and homemade berry compote",
+      badgeFa: "",
+      badgeEn: "",
+      image: "https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=400&q=80"
+    }
+  ]
+};
+
+window.DEFAULT_MENU_DATA = DEFAULT_MENU_DATA;

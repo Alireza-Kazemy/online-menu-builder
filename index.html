@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>کافه ارغوان</title>
+  <meta name="description"
+    content="منوی دیجیتال کافه ارغوان با الهام از اصالت فرش لاکی و هنر سنتی ایرانی در قالبی مدرن و شیشه‌ای، دوزبانه">
+  <meta name="theme-color" content="#7A0C16">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- Persian Carpet Subtle Background Texture & Ambient Glow -->
+  <div class="carpet-pattern-overlay"></div>
+  <div class="toranj-glow"></div>
+
+  <!-- Mobile-First App Container -->
+  <div class="app-container">
+
+    <!-- Top Sticky Bar (فقط سوییچ زبان و برند، بدون هیچ دکمه ادمینی) -->
+    <header class="top-nav" id="topNav">
+      <div class="brand-minimal">
+        <div>
+          <div class="brand-title display-title" id="brandTitle">کافه ارغوان</div>
+          <div class="brand-subtitle" id="brandSubtitle">طعم اصیل ایرانی در قالبی نوین</div>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <!-- Bilingual Switcher -->
+        <button class="btn-glass lang-toggle-btn" id="langToggleBtn" title="تغییر زبان / Switch Language">
+          English
+        </button>
+      </div>
+    </header>
+
+    <!-- Hero Showcase Section -->
+    <section class="hero-section">
+      <div class="hero-carpet-border"></div>
+
+      <h1 class="hero-title display-title" id="heroTitle">کافه ارغوان</h1>
+      <p class="hero-desc" id="heroDesc">
+        لذت طعم اصیل ایرانی در کنار حال خوب
+      </p>
+
+      <div class="hero-badges">
+        <a href="https://instagram.com/arghavansaray" target="_blank" rel="noopener noreferrer"
+          class="info-pill instagram-pill" id="heroInstagramLink" style="text-decoration: none; color: inherit;">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+          </svg>
+          <span id="heroInstagramText">اینستاگرام: arghavansaray@</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Search Input Bar -->
+    <div class="search-container">
+      <div class="search-input-wrapper">
+        <svg viewBox="0 0 24 24">
+          <path
+            d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+        </svg>
+        <input type="text" id="searchInput" class="search-input" placeholder="جستجوی نوشیدنی، غذا، دسر..."
+          autocomplete="off">
+        <button class="search-clear-btn" id="searchClearBtn" title="پاک کردن جستجو">✕</button>
+      </div>
+    </div>
+
+    <!-- Sticky Horizontal Category Navigation (Smooth scroll to section) -->
+    <div class="categories-wrapper">
+      <div class="categories-scroll" id="categoriesScroll">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+
+    <!-- Main Categorized Menu Sections (همه محصولات زیر دسته اختصاصی خود در صفحه اصلی) -->
+    <main class="menu-section" id="menuSectionsContainer">
+      <!-- Injected by app.js grouped by category -->
+    </main>
+
+    <!-- Footer Information -->
+    <footer class="footer-section">
+      <div class="footer-logo display-title">کافه ارغوان</div>
+      <p class="footer-info" id="footerNote">لذت طعم اصیل ایرانی در کنار حال خوب</p>
+      <div class="footer-links">
+        <a href="https://maps.app.goo.gl/wM8R81JvMeoYVUBDA?g_st=ac" target="_blank" rel="noopener noreferrer"
+          class="info-pill location-pill" style="text-decoration: none;" id="footerLocationBtn">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+          </svg>
+          <span id="footerLocationText">مسیریابی و لوکیشن کافه</span>
+        </a>
+        <a href="https://instagram.com/arghavansaray" target="_blank" rel="noopener noreferrer"
+          class="info-pill instagram-pill" style="text-decoration: none; color: inherit;">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+          </svg>
+          <span id="footerInstagramText">Instagram: @arghavansaray</span>
+        </a>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>

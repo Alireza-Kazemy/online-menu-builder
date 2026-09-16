@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>پنل مدیریت کافه ارغوان | Café Arghavan Admin</title>
+  <meta name="theme-color" content="#7A0C16">
+  <meta name="robots" content="noindex, nofollow">
+
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Admin Specific Styling */
+    .admin-gate-wrapper {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .auth-card {
+      background: rgba(26, 9, 13, 0.88);
+      border: 1px solid var(--gold-border);
+      border-radius: var(--radius-xl);
+      padding: 32px 24px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), var(--shadow-glow);
+    }
+
+    .auth-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 16px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--lacquer-rich), var(--lacquer-deep));
+      border: 1px solid var(--gold-antique);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+    }
+
+    .auth-title {
+      font-size: 1.3rem;
+      color: var(--gold-light);
+      margin-bottom: 8px;
+    }
+
+    .auth-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .auth-error {
+      color: #ff6b6b;
+      font-size: 0.8rem;
+      margin-top: 8px;
+      display: none;
+    }
+
+    .admin-panel-container {
+      display: none;
+      max-width: 680px;
+      margin: 0 auto;
+      min-height: 100vh;
+      background: rgba(18, 6, 9, 0.9);
+      border-left: 1px solid var(--gold-border);
+      border-right: 1px solid var(--gold-border);
+      padding: 18px;
+      box-shadow: 0 0 60px rgba(0, 0, 0, 0.8);
+    }
+
+    .admin-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--gold-border);
+      margin-bottom: 20px;
+    }
+
+    .back-to-menu-link {
+      color: var(--gold-antique);
+      text-decoration: none;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border: 1px solid var(--gold-border);
+      border-radius: var(--radius-full);
+      background: rgba(0, 0, 0, 0.3);
+      transition: var(--transition-fast);
+    }
+
+    .back-to-menu-link:hover {
+      background: var(--lacquer-primary);
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="carpet-pattern-overlay"></div>
+  <div class="toranj-glow"></div>
+
+  <!-- بخش اول: گیت امنیتی ورود رمز عبور -->
+  <div class="admin-gate-wrapper" id="authGate">
+    <div class="auth-card">
+      <div class="auth-icon">🔒</div>
+      <h1 class="auth-title display-title">ورود به پنل مدیریت</h1>
+      <p class="auth-desc">برای دسترسی به مدیریت منوی کافه ارغوان، رمز عبور مدیریت را وارد کنید:</p>
+
+      <form id="authForm">
+        <input type="password" id="authPassword" class="form-input" placeholder="رمز عبور ادمین..."
+          style="text-align: center; letter-spacing: 2px;" required autofocus autocomplete="current-password">
+        <div class="auth-error" id="authError">رمز عبور اشتباه است! دوباره تلاش کنید.</div>
+        <button type="submit" class="btn-primary-action" style="margin-top: 14px;">ورود به مدیریت</button>
+      </form>
+
+      <div style="margin-top: 18px;">
+        <a href="index.html" style="color: var(--text-faint); font-size: 0.8rem; text-decoration: none;">بازگشت به صفحه
+          منو</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- بخش دوم: داشبورد کامل مدیریت ادمین (پس از وارد کردن پسورد) -->
+  <div class="admin-panel-container" id="adminDashboard">
+
+    <div class="admin-header">
+      <div>
+        <h2 style="color: var(--gold-light); font-size: 1.25rem;">پنل مدیریت منوی کافه ارغوان</h2>
+        <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+          <span style="font-size: 0.75rem; color: var(--gold-antique);">ذخیره مستقیم روی سرور (دایرکت ادمین)</span>
+          <span id="serverStatusBadge"
+            style="font-size: 0.72rem; padding: 2px 8px; border-radius: 12px; background: rgba(39, 174, 96, 0.2); border: 1px solid rgba(39, 174, 96, 0.5); color: #2ecc71;">●
+            متصل به سرور</span>
+        </div>
+      </div>
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <a href="index.html" class="back-to-menu-link">
+          <span>👀</span> مشاهده منو
+        </a>
+        <button id="logoutBtn" class="btn-glass"
+          style="color: #ff6b6b; border-color: rgba(255,100,100,0.3);">خروج</button>
+      </div>
+    </div>
+
+    <!-- زبان و تب‌های مدیریت -->
+    <div class="admin-tabs">
+      <button class="admin-tab-btn active" id="tabManageBtn">لیست و مدیریت آیتم‌ها</button>
+      <button class="admin-tab-btn" id="tabCategoriesBtn">مدیریت دسته‌بندی‌ها</button>
+      <button class="admin-tab-btn" id="tabAddBtn">افزودن آیتم جدید</button>
+    </div>
+
+    <!-- تب مدیریت دسته‌بندی‌ها -->
+    <div id="viewCategories" style="display: none;">
+      <div
+        style="background: rgba(28, 10, 14, 0.7); border: 1px solid var(--gold-border); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 20px;">
+        <h3 style="font-size: 1.05rem; color: var(--gold-light); margin-bottom: 12px;" id="catFormTitle">افزودن
+          دسته‌بندی جدید</h3>
+        <form id="categoryForm">
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label">نام فارسی دسته *</label>
+              <input type="text" id="inputCatNameFa" class="form-input" placeholder="مثلاً: قلیان و پذیرایی ویژه"
+                required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">نام انگلیسی دسته</label>
+              <input type="text" id="inputCatNameEn" class="form-input" placeholder="e.g. Special Hookah & Drinks">
+            </div>
+          </div>
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label">آیکون دسته (ایموجی، کد SVG یا آدرس عکس)</label>
+              <input type="text" id="inputCatIcon" class="form-input"
+                placeholder="مثلاً: ☕ یا کد <svg> یا https://.../icon.svg" value="✨">
+            </div>
+            <div class="form-group" style="display: flex; align-items: flex-end;">
+              <button type="submit" class="btn-primary-action" id="submitCatBtn"
+                style="margin-top: 0; padding: 10px;">ثبت دسته‌بندی</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <span style="font-size: 0.85rem; color: var(--gold-light); font-weight: 700;">لیست دسته‌بندی‌های فعال منو</span>
+        <span style="font-size: 0.75rem; color: var(--text-muted);" id="categoriesCountText">--</span>
+      </div>
+      <p
+        style="font-size: 0.75rem; color: var(--gold-antique); margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
+        <span>🖐️</span>
+        <span>می‌توانید با کشیدن (درگ) آیکون یا دکمه‌های ▲ و ▼ ترتیب دسته‌ها را تغییر دهید. ترتیب بلافاصله در منوی
+          کاربران ذخیره می‌شود.</span>
+      </p>
+
+      <div class="admin-items-list" id="adminCategoriesList" style="max-height: 60vh;">
+        <!-- Injected by admin.js -->
+      </div>
+    </div>
+
+    <!-- لیست اقلام جهت ویرایش یا حذف -->
+    <div id="viewManage">
+      <!-- فیلتر دسته‌بندی برای مرتب‌سازی و تفکیک آیتم‌ها -->
+      <div class="admin-filter-bar">
+        <span class="admin-filter-label">فیلتر بر اساس دسته:</span>
+        <select id="adminCatFilterSelect" class="admin-filter-select">
+          <option value="all">نمایش همه محصولات</option>
+        </select>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <span style="font-size: 0.85rem; color: var(--text-muted);" id="adminItemsCountText">--</span>
+        <button type="button" class="btn-glass" id="resetDataBtn"
+          style="font-size: 0.75rem; color: var(--gold-antique);">
+          🔄 بازنشانی به منوی اولیه
+        </button>
+      </div>
+      <p
+        style="font-size: 0.75rem; color: var(--gold-antique); margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
+        <span>🖐️</span>
+        <span>با گرفتن آیکون ⠿ یا کلیک روی دکمه‌های ▲ و ▼، جایگاه محصولات را جابجا کنید. تغییرات لایو روی سرور ثبت
+          می‌شوند.</span>
+      </p>
+
+      <div class="admin-items-list" id="adminItemsList" style="max-height: 70vh;">
+        <!-- Filled by admin.js -->
+      </div>
+    </div>
+
+    <!-- فرم افزودن / ویرایش آیتم -->
+    <div id="viewForm" style="display: none;">
+      <h3 style="font-size: 1.05rem; color: var(--gold-light); margin-bottom: 16px;" id="formHeading">افزودن آیتم جدید
+      </h3>
+
+      <form id="adminItemForm">
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">نام آیتم (فارسی) *</label>
+            <input type="text" id="inputNameFa" class="form-input" placeholder="مثلاً: اسپرسو دبل" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">نام انگلیسی</label>
+            <input type="text" id="inputNameEn" class="form-input" placeholder="e.g. Double Espresso">
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">قیمت (تومان) *</label>
+            <input type="number" id="inputPrice" class="form-input" placeholder="85000" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">دسته‌بندی *</label>
+            <select id="inputCategory" class="form-select">
+              <!-- Options populated by JS -->
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">محتویات و ترکیبات (فارسی) *</label>
+          <input type="text" id="inputIngFa" class="form-input"
+            placeholder="مثلاً: عصاره قهوه ۱۰۰٪ عربیکا، شیر پرچرب، سیروپ زعفران" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">محتویات (انگلیسی)</label>
+          <input type="text" id="inputIngEn" class="form-input"
+            placeholder="e.g. 100% Arabica, steamed whole milk, saffron syrup">
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">برچسب ویژه فارسی (اختیاری)</label>
+            <input type="text" id="inputBadgeFa" class="form-input" placeholder="مخصوص / پرفروش">
+          </div>
+          <div class="form-group">
+            <label class="form-label">برچسب انگلیسی</label>
+            <input type="text" id="inputBadgeEn" class="form-input" placeholder="Signature / Popular">
+          </div>
+        </div>
+
+        <!-- آپلود یا لینک عکس تامبنیل -->
+        <div class="form-group">
+          <label class="form-label">تصویر تامبنیل آیتم</label>
+
+          <div class="image-picker-zone" id="imagePickerZone">
+            <img id="imagePickerPreview" class="image-picker-preview" alt="پیش‌نمایش تصویر">
+            <div class="image-picker-hint">
+              📸 کلیک کنید برای آپلود عکس از گالری گوشی یا سیستم
+            </div>
+          </div>
+          <input type="file" id="fileImageUpload" accept="image/*" style="display: none;">
+
+          <div style="margin-top: 10px;">
+            <label class="form-label" style="font-size:0.75rem;">یا لینک عکس اینترنتی را وارد کنید:</label>
+            <input type="url" id="inputImageUrl" class="form-input" placeholder="https://images.unsplash.com/photo-...">
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+          <button type="submit" class="btn-primary-action" id="submitFormBtn">ثبت و ذخیره در منو</button>
+          <button type="button" class="btn-glass" id="cancelFormBtn" style="padding: 12px 20px;">انصراف</button>
+        </div>
+
+      </form>
+    </div>
+
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="data.js"></script>
+  <script src="admin.js"></script>
+</body>
+
+</html>
