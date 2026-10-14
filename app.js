@@ -66,7 +66,7 @@
         }
       }
     } catch (e) {
-      console.warn("api.php not available, checking menu_data.json...", e);
+      console.warn("api.php not available, checking menu_data.json fallback...", e);
       try {
         const fallbackRes = await fetch('menu_data.json?t=' + Date.now());
         if (fallbackRes.ok) {
@@ -77,8 +77,6 @@
         console.warn("menu_data.json not available:", err);
       }
     }
-    // Fallback to local default bundle
-    state.data = JSON.parse(JSON.stringify(window.DEFAULT_MENU_DATA || { categories: [], items: [] }));
     return false;
   }
 
@@ -298,7 +296,11 @@
 
         card.innerHTML = `
           <div class="card-img-wrapper">
-            <img src="${item.image || 'https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?auto=format&fit=crop&w=400&q=80'}" alt="${title}" class="card-img" loading="lazy" />
+            <img src="${item.image || 'https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?auto=format&fit=crop&w=400&q=80'}" 
+                 alt="${title}" 
+                 class="card-img" 
+                 loading="lazy" 
+                 onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?auto=format&fit=crop&w=400&q=80';" />
             ${badge ? `<div class="card-badge">${badge}</div>` : ''}
           </div>
           <div class="card-content">
@@ -325,6 +327,7 @@
         grid.appendChild(card);
       });
 
+      sec.classList.add('fade-in');
       container.appendChild(sec);
     });
 
@@ -340,6 +343,40 @@
 
     // Connect scrollspy once DOM nodes exist
     setupScrollSpy();
+  }
+
+  function renderDatabaseErrorState() {
+    const container = document.getElementById('menuSectionsContainer');
+    if (!container) return;
+    const isFa = state.currentLang === 'fa';
+    container.innerHTML = `
+      <div class="empty-state" style="padding: 40px 20px;">
+        <div class="empty-state-icon" style="font-size: 2.2rem; margin-bottom: 12px;">⚠️</div>
+        <div style="font-size: 1.15rem; font-weight: 700; color: var(--gold-light); margin-bottom: 8px;">
+          ${isFa ? 'خطا در بارگذاری منوی کافه' : 'Error Loading Café Menu'}
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 18px; line-height: 1.6;">
+          ${isFa ? 'امکان دریافت اطلاعات از پایگاه‌داده سرور وجود ندارد. لطفاً اتصال اینترنت را بررسی کنید.' : 'Unable to retrieve menu data from the database. Please check your connection.'}
+        </p>
+        <button class="btn-primary-action" id="retryFetchBtn" style="max-width: 220px; margin: 0 auto; padding: 10px 18px;">
+          ${isFa ? '🔄 تلاش مجدد برای دریافت منو' : '🔄 Retry Loading Menu'}
+        </button>
+      </div>
+    `;
+    const btn = document.getElementById('retryFetchBtn');
+    if (btn) {
+      btn.addEventListener('click', () => {
+        container.innerHTML = `
+          <div class="skeleton-loading-wrapper">
+            <div class="skeleton-banner">
+              <span class="skeleton-banner-icon">☕</span>
+              <span class="skeleton-banner-text">در حال برقراری ارتباط مجدد با پایگاه‌داده...</span>
+            </div>
+          </div>
+        `;
+        init();
+      });
+    }
   }
 
   function initEvents() {
@@ -384,14 +421,13 @@
 
   async function init() {
     initEvents();
-    // Render immediate default bundle while fetching newest from server
-    state.data = JSON.parse(JSON.stringify(window.DEFAULT_MENU_DATA || { categories: [], items: [] }));
-    setLanguage(state.currentLang);
 
-    // Fetch the ground-truth data from server and refresh view
+    // Fetch ground-truth real data directly from database (NO mock flash)
     const loaded = await fetchServerData();
-    if (loaded) {
+    if (loaded && state.data && state.data.categories) {
       setLanguage(state.currentLang);
+    } else {
+      renderDatabaseErrorState();
     }
   }
 

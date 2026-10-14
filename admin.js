@@ -67,9 +67,13 @@
       }
     }
     
-    // Default data
-    state.data = JSON.parse(JSON.stringify(window.DEFAULT_MENU_DATA || { categories: [], items: [] }));
-    updateServerBadge('error', 'دسترسی آفلاین / پیش‌فرض');
+    // Fallback if network totally down
+    state.data = {
+      cafeInfo: { nameFa: "کافه ارغوان", nameEn: "Café Arghavan" },
+      categories: [],
+      items: []
+    };
+    updateServerBadge('error', 'عدم دسترسی به پایگاه‌داده');
   }
 
   async function saveData() {
@@ -628,11 +632,19 @@
 
     const preview = document.getElementById('imagePickerPreview');
     const zone = document.getElementById('imagePickerZone');
+    const removeBtn = document.getElementById('removeImageBtn');
+    const hint = document.getElementById('imagePickerHint');
+
     if (item.image) {
       preview.src = item.image;
       zone.classList.add('has-image');
+      if (removeBtn) removeBtn.style.display = 'inline-block';
+      if (hint) hint.textContent = "📸 کلیک کنید برای تغییر عکس محصول (یا از دکمه حذف استفاده نمایید)";
     } else {
+      preview.src = '';
       zone.classList.remove('has-image');
+      if (removeBtn) removeBtn.style.display = 'none';
+      if (hint) hint.textContent = "📸 کلیک کنید برای انتخاب و آپلود عکس (JPG, PNG, WEBP, AVIF تا ۵ مگابایت)";
     }
 
     switchTab('form');
@@ -699,7 +711,7 @@
 
     saveData();
     renderAdminItemsList();
-    showToast("آیتم با موفقیت ذخیره شد");
+    showToast("آیتم با موفقیت در پایگاه‌داده ذخیره شد ✨");
     switchTab('manage');
     resetItemForm();
   }
@@ -707,8 +719,23 @@
   function resetItemForm() {
     state.editingItemId = null;
     document.getElementById('adminItemForm').reset();
-    document.getElementById('imagePickerZone').classList.remove('has-image');
-    document.getElementById('imagePickerPreview').src = '';
+    const zone = document.getElementById('imagePickerZone');
+    const preview = document.getElementById('imagePickerPreview');
+    const removeBtn = document.getElementById('removeImageBtn');
+    const hint = document.getElementById('imagePickerHint');
+    const fileInput = document.getElementById('fileImageUpload');
+    const spinner = document.getElementById('imageUploadSpinner');
+
+    if (zone) zone.classList.remove('has-image');
+    if (preview) preview.src = '';
+    if (removeBtn) removeBtn.style.display = 'none';
+    if (fileInput) fileInput.value = '';
+    if (spinner) spinner.style.display = 'none';
+    if (hint) {
+      hint.style.display = 'block';
+      hint.textContent = "📸 کلیک کنید برای انتخاب و آپلود عکس (JPG, PNG, WEBP, AVIF تا ۵ مگابایت)";
+    }
+
     document.getElementById('formHeading').textContent = "افزودن آیتم جدید";
     document.getElementById('submitFormBtn').textContent = "ثبت و ذخیره در منو";
   }
@@ -718,33 +745,147 @@
     const dropZone = document.getElementById('imagePickerZone');
     const urlInput = document.getElementById('inputImageUrl');
     const preview = document.getElementById('imagePickerPreview');
+    const spinner = document.getElementById('imageUploadSpinner');
+    const statusText = document.getElementById('imageUploadStatusText');
+    const hint = document.getElementById('imagePickerHint');
+    const removeBtn = document.getElementById('removeImageBtn');
 
     if (!fileInput || !dropZone) return;
 
-    dropZone.addEventListener('click', () => {
+    // Click to open file dialog
+    dropZone.addEventListener('click', (e) => {
+      // Don't re-trigger if clicking remove button
+      if (e.target.closest('#removeImageBtn')) return;
       fileInput.click();
     });
+
+    // Remove image button
+    if (removeBtn) {
+      removeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        urlInput.value = '';
+        fileInput.value = '';
+        preview.src = '';
+        dropZone.classList.remove('has-image');
+        removeBtn.style.display = 'none';
+        if (hint) {
+          hint.style.display = 'block';
+          hint.textContent = "📸 کلیک کنید برای انتخاب و آپلود عکس (JPG, PNG, WEBP, AVIF تا ۵ مگابایت)";
+        }
+        showToast("تصویر آیتم حذف شد");
+      });
+    }
+
+    // Process selected image file
+    async function processAndUploadFile(file) {
+      if (!file) return;
+
+      // 1. Check file size (5MB Max)
+      const MAX_BYTES = 5 * 1024 * 1024;
+      if (file.size > MAX_BYTES) {
+        const sizeMb = (file.size / (1024 * 1024)).toFixed(2);
+        showToast(`حجم فایل بیشتر از ۵ مگابایت است (${sizeMb} MB). لطفاً فایل کوچک‌تری انتخاب فرمایید.`, 'error');
+        fileInput.value = '';
+        return;
+      }
+
+      // 2. Check extension & MIME type
+      const allowedExts = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif', 'svg'];
+      const fileExt = file.name.split('.').pop().toLowerCase();
+      if (!file.type.startsWith('image/') && !allowedExts.includes(fileExt)) {
+        showToast("فرمت فایل معتبر نیست. لطفاً تصویر با فرمت JPG, PNG, WEBP یا AVIF انتخاب نمایید.", 'error');
+        fileInput.value = '';
+        return;
+      }
+
+      // 3. UI uploading feedback
+      if (spinner) spinner.style.display = 'flex';
+      if (statusText) statusText.textContent = `در حال بارگذاری و بهینه‌سازی فایل (${(file.size / 1024).toFixed(0)} KB)...`;
+      if (hint) hint.style.display = 'none';
+
+      // Immediate local preview
+      try {
+        const objectUrl = URL.createObjectURL(file);
+        preview.src = objectUrl;
+        dropZone.classList.add('has-image');
+      } catch (e) {}
+
+      // 4. Send directly to server upload endpoint
+      try {
+        const formData = new FormData();
+        formData.append('image', file);
+        formData.append('adminPassword', ADMIN_PASS);
+
+        const response = await fetch('api.php?action=upload', {
+          method: 'POST',
+          headers: {
+            'X-Admin-Password': ADMIN_PASS
+          },
+          body: formData
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success && result.url) {
+          urlInput.value = result.url;
+          preview.src = result.url;
+          if (removeBtn) removeBtn.style.display = 'inline-block';
+          if (hint) {
+            hint.style.display = 'block';
+            hint.textContent = "✓ تصویر در سرور ذخیره شد (کلیک برای تغییر)";
+          }
+          showToast("تصویر با موفقیت در سرور آپلود شد ✨");
+        } else {
+          throw new Error(result.message || 'خطا در بارگذاری روی سرور');
+        }
+      } catch (err) {
+        console.error("Upload error:", err);
+        showToast(err.message || "خطا در آپلود تصویر روی سرور", "error");
+        if (hint) {
+          hint.style.display = 'block';
+          hint.textContent = "❌ خطا در آپلود! کلیک کنید تا مجدداً تلاش نمایید.";
+        }
+      } finally {
+        if (spinner) spinner.style.display = 'none';
+        fileInput.value = '';
+      }
+    }
 
     fileInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (file) {
-        const reader = new FileReader();
-        reader.onload = function (event) {
-          const base64 = event.target.result;
-          urlInput.value = base64;
-          preview.src = base64;
-          dropZone.classList.add('has-image');
-        };
-        reader.readAsDataURL(file);
+        processAndUploadFile(file);
       }
     });
 
+    // Drag & Drop
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        processAndUploadFile(e.dataTransfer.files[0]);
+      }
+    });
+
+    // Manual URL typing
     urlInput.addEventListener('input', () => {
-      if (urlInput.value.trim()) {
-        preview.src = urlInput.value.trim();
+      const val = urlInput.value.trim();
+      if (val) {
+        preview.src = val;
         dropZone.classList.add('has-image');
+        if (removeBtn) removeBtn.style.display = 'inline-block';
       } else {
         dropZone.classList.remove('has-image');
+        if (removeBtn) removeBtn.style.display = 'none';
       }
     });
   }
@@ -775,16 +916,14 @@
       });
     }
 
-    // Reset Factory default
+    // Refresh Data directly from Database
     document.getElementById('resetDataBtn').addEventListener('click', async () => {
-      if (confirm("آیا مطمئن هستید که می‌خواهید منو به حالت اولیه بازگردد؟ کلیه تغییرات روی سرور بازنشانی خواهند شد.")) {
-        state.data = JSON.parse(JSON.stringify(window.DEFAULT_MENU_DATA || { categories: [], items: [] }));
-        await saveData();
-        renderAdminItemsList();
-        renderAdminCategoriesList();
-        populateCategorySelect();
-        showToast("منو با موفقیت به مقادیر اولیه کارخانه بازنشانی و در سرور ثبت شد");
-      }
+      updateServerBadge('saving', 'در حال همگام‌سازی با پایگاه‌داده...');
+      await loadData();
+      renderAdminItemsList();
+      renderAdminCategoriesList();
+      populateCategorySelect();
+      showToast("اطلاعات منو مستقیماً از پایگاه‌داده همگام و به‌روزرسانی شد ✨");
     });
 
     setupImageUpload();

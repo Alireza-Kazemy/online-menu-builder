@@ -294,19 +294,28 @@
 
         <!-- آپلود یا لینک عکس تامبنیل -->
         <div class="form-group">
-          <label class="form-label">تصویر تامبنیل آیتم</label>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <label class="form-label" style="margin-bottom: 0;">تصویر تامبنیل آیتم (حداکثر ۵ مگابایت)</label>
+            <button type="button" id="removeImageBtn" class="btn-glass" style="display: none; font-size: 0.72rem; color: #ff6b6b; padding: 2px 8px; border-color: rgba(255,100,100,0.3);">
+              ✕ حذف تصویر
+            </button>
+          </div>
 
           <div class="image-picker-zone" id="imagePickerZone">
+            <div class="image-upload-spinner" id="imageUploadSpinner" style="display: none;">
+              <span class="spinner-icon">⏳</span>
+              <span id="imageUploadStatusText">در حال بارگذاری و بهینه‌سازی تصویر در سرور...</span>
+            </div>
             <img id="imagePickerPreview" class="image-picker-preview" alt="پیش‌نمایش تصویر">
-            <div class="image-picker-hint">
-              📸 کلیک کنید برای آپلود عکس از گالری گوشی یا سیستم
+            <div class="image-picker-hint" id="imagePickerHint">
+              📸 کلیک کنید برای انتخاب و آپلود عکس (JPG, PNG, WEBP, AVIF تا ۵ مگابایت)
             </div>
           </div>
-          <input type="file" id="fileImageUpload" accept="image/*" style="display: none;">
+          <input type="file" id="fileImageUpload" accept="image/jpeg,image/png,image/webp,image/gif,image/avif,image/svg+xml" style="display: none;">
 
           <div style="margin-top: 10px;">
-            <label class="form-label" style="font-size:0.75rem;">یا لینک عکس اینترنتی را وارد کنید:</label>
-            <input type="url" id="inputImageUrl" class="form-input" placeholder="https://images.unsplash.com/photo-...">
+            <label class="form-label" style="font-size:0.75rem;">یا آدرس اینترنتی مستقیم عکس را وارد کنید:</label>
+            <input type="url" id="inputImageUrl" class="form-input" placeholder="https://... یا uploads/item_...">
           </div>
         </div>
 
@@ -322,7 +331,6 @@
 
   <div class="toast-container" id="toastContainer"></div>
 
-  <script src="data.js"></script>
   <script src="admin.js"></script>
 </body>
 

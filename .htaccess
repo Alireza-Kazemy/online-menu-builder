@@ -1,9 +1,11 @@
-# Protect sensitive files
-<Files "menu_data.json">
+# Protect sensitive files (Databases, JSON, INI, SQL, Logs)
+<FilesMatch "\.(sqlite|sqlite3|db|json|ini|sql|log)$">
     <RequireAll>
         Require all denied
     </RequireAll>
-</Files>
+    Order deny,allow
+    Deny from all
+</FilesMatch>
 
 # Enable GZIP Compression for maximum speed
 <IfModule mod_deflate.c>

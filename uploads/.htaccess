@@ -1,0 +1,11 @@
+# Secure Uploads Directory: Serve only static image files, forbid script execution
+Options -ExecCGI -Indexes
+php_flag engine off
+
+<FilesMatch "\.(php|php5|php7|php8|phtml|phar|pl|py|jsp|asp|sh|cgi)$">
+    <RequireAll>
+        Require all denied
+    </RequireAll>
+    Order deny,allow
+    Deny from all
+</FilesMatch>

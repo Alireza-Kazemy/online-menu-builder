@@ -75,13 +75,59 @@
     <!-- Sticky Horizontal Category Navigation (Smooth scroll to section) -->
     <div class="categories-wrapper">
       <div class="categories-scroll" id="categoriesScroll">
-        <!-- Rendered dynamically -->
+        <div class="skeleton-shimmer skeleton-category-pill"></div>
+        <div class="skeleton-shimmer skeleton-category-pill"></div>
+        <div class="skeleton-shimmer skeleton-category-pill"></div>
+        <div class="skeleton-shimmer skeleton-category-pill"></div>
       </div>
     </div>
 
-    <!-- Main Categorized Menu Sections (همه محصولات زیر دسته اختصاصی خود در صفحه اصلی) -->
+    <!-- Main Categorized Menu Sections (Pure Database Data) -->
     <main class="menu-section" id="menuSectionsContainer">
-      <!-- Injected by app.js grouped by category -->
+      <div class="skeleton-loading-wrapper" id="menuSkeletonLoader">
+        <div class="skeleton-banner">
+          <span class="skeleton-banner-icon">☕</span>
+          <span class="skeleton-banner-text">در حال بارگذاری منوی لحظه‌ای کافه ارغوان از پایگاه‌داده...</span>
+        </div>
+        <div class="items-grid">
+          <div class="menu-card skeleton-card">
+            <div class="card-img-wrapper skeleton-shimmer skeleton-img"></div>
+            <div class="card-content">
+              <div class="skeleton-shimmer skeleton-title skeleton-line"></div>
+              <div class="skeleton-shimmer skeleton-subtitle skeleton-line"></div>
+              <div class="skeleton-shimmer skeleton-desc skeleton-line"></div>
+              <div class="skeleton-shimmer skeleton-price"></div>
+            </div>
+          </div>
+          <div class="menu-card skeleton-card">
+            <div class="card-img-wrapper skeleton-shimmer skeleton-img"></div>
+            <div class="card-content">
+              <div class="skeleton-shimmer skeleton-title skeleton-line"></div>
+              <div class="skeleton-shimmer skeleton-subtitle skeleton-line"></div>
+              <div class="skeleton-shimmer skeleton-desc skeleton-line"></div>
+              <div class="skeleton-shimmer skeleton-price"></div>
+            </div>
+          </div>
+          <div class="menu-card skeleton-card">
+            <div class="card-img-wrapper skeleton-shimmer skeleton-img"></div>
+            <div class="card-content">
+              <div class="skeleton-shimmer skeleton-title skeleton-line"></div>
+              <div class="skeleton-shimmer skeleton-subtitle skeleton-line"></div>
+              <div class="skeleton-shimmer skeleton-desc skeleton-line"></div>
+              <div class="skeleton-shimmer skeleton-price"></div>
+            </div>
+          </div>
+          <div class="menu-card skeleton-card">
+            <div class="card-img-wrapper skeleton-shimmer skeleton-img"></div>
+            <div class="card-content">
+              <div class="skeleton-shimmer skeleton-title skeleton-line"></div>
+              <div class="skeleton-shimmer skeleton-subtitle skeleton-line"></div>
+              <div class="skeleton-shimmer skeleton-desc skeleton-line"></div>
+              <div class="skeleton-shimmer skeleton-price"></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
 
     <!-- Footer Information -->
@@ -113,7 +159,6 @@
   <div class="toast-container" id="toastContainer"></div>
 
   <!-- Scripts -->
-  <script src="data.js"></script>
   <script src="app.js"></script>
 </body>
 

@@ -1366,14 +1366,16 @@ body[dir="ltr"] .card-subtitle {
 
 /* Image Upload / Preview in Form */
 .image-picker-zone {
+  position: relative;
   border: 2px dashed var(--gold-border);
   border-radius: var(--radius-md);
-  padding: 12px;
+  padding: 14px;
   text-align: center;
   background: rgba(0, 0, 0, 0.25);
   cursor: pointer;
   transition: var(--transition-fast);
   margin-top: 6px;
+  overflow: hidden;
 }
 
 .image-picker-zone:hover {
@@ -1381,12 +1383,19 @@ body[dir="ltr"] .card-subtitle {
   border-color: var(--gold-antique);
 }
 
+.image-picker-zone.dragover {
+  border-color: var(--gold-light);
+  background: rgba(148, 19, 32, 0.35);
+  transform: scale(1.01);
+}
+
 .image-picker-preview {
   width: 100%;
-  height: 120px;
+  height: 140px;
   object-fit: cover;
   border-radius: var(--radius-sm);
   margin-bottom: 8px;
+  border: 1px solid var(--gold-border);
   display: none;
 }
 
@@ -1395,8 +1404,30 @@ body[dir="ltr"] .card-subtitle {
 }
 
 .image-picker-hint {
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.image-upload-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(22, 6, 9, 0.92);
+  border: 1px solid var(--gold-antique);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  color: var(--gold-light);
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  animation: pulseGoldGlow 1.5s infinite alternate;
+}
+
+@keyframes pulseGoldGlow {
+  0% { box-shadow: 0 0 5px rgba(212, 175, 55, 0.2); }
+  100% { box-shadow: 0 0 15px rgba(212, 175, 55, 0.5); }
 }
 
 .btn-primary-action {
@@ -1533,3 +1564,122 @@ body[dir="ltr"] .card-subtitle {
   fill: #fff;
   transform: scale(1.15);
 }
+
+/* ==========================================================================
+   Skeleton Shimmer Loading State (Pure Database Loading - No Mock Flash)
+   ========================================================================== */
+.skeleton-loading-wrapper {
+  padding: 10px 0;
+}
+
+.skeleton-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(45, 9, 14, 0.45);
+  border: 1px solid var(--gold-border);
+  border-radius: var(--radius-md);
+  padding: 14px 20px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.skeleton-banner-icon {
+  font-size: 1.3rem;
+  animation: pulseGoldGlow 1.4s infinite alternate;
+}
+
+.skeleton-banner-text {
+  font-size: 0.88rem;
+  color: var(--gold-light);
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(38, 10, 15, 0.6) 0%,
+    rgba(95, 14, 23, 0.55) 50%,
+    rgba(38, 10, 15, 0.6) 100%
+  );
+  background-size: 200% 100%;
+  animation: lacquerShimmer 1.8s infinite linear;
+  border-radius: var(--radius-sm);
+}
+
+@keyframes lacquerShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton-card {
+  pointer-events: none;
+  background: rgba(22, 6, 9, 0.7);
+  border: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+.skeleton-img {
+  width: 100%;
+  height: 100%;
+  min-height: 160px;
+}
+
+.skeleton-line {
+  height: 14px;
+  margin-bottom: 8px;
+}
+
+.skeleton-title {
+  width: 65%;
+  height: 18px;
+  border-radius: 4px;
+}
+
+.skeleton-subtitle {
+  width: 40%;
+  height: 12px;
+  margin-bottom: 12px;
+  border-radius: 4px;
+}
+
+.skeleton-desc {
+  width: 90%;
+  height: 12px;
+  border-radius: 4px;
+}
+
+.skeleton-price {
+  width: 80px;
+  height: 22px;
+  border-radius: 6px;
+  margin-top: 10px;
+}
+
+.skeleton-category-pill {
+  width: 110px;
+  height: 38px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.fade-in {
+  animation: contentFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes contentFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+

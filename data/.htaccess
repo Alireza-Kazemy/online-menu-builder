@@ -1,0 +1,6 @@
+# Protect database directory from direct HTTP access
+<RequireAll>
+    Require all denied
+</RequireAll>
+Order deny,allow
+Deny from all
