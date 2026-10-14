@@ -77,7 +77,7 @@
   }
 
   async function saveData() {
-    if (state.isSaving) return;
+    if (state.isSaving) return false;
     state.isSaving = true;
     updateServerBadge('saving');
 
@@ -98,7 +98,8 @@
 
       if (response.ok && result.success) {
         updateServerBadge('success', '● ذخیره شد در سرور (' + new Date().toLocaleTimeString('fa-IR') + ')');
-        showToast("تغییرات با موفقیت در سرور ذخیره شد و برای همه کاربران اعمال گردید ✨");
+        showToast(result.message || "تغییرات با موفقیت در سرور ذخیره شد ✨");
+        return true;
       } else {
         throw new Error(result.message || 'خطا در ذخیره‌سازی سرور');
       }
@@ -106,6 +107,7 @@
       console.error("Server Save Error:", err);
       updateServerBadge('error', '✕ خطا در ذخیره سرور');
       showToast("خطا در ذخیره در سرور: " + (err.message || "لطفاً مجدد تلاش کنید"));
+      return false;
     } finally {
       state.isSaving = false;
     }
@@ -659,7 +661,7 @@
     }
   }
 
-  function handleSaveItem(e) {
+  async function handleSaveItem(e) {
     e.preventDefault();
 
     const nameFa = document.getElementById('inputNameFa').value.trim();
@@ -709,11 +711,12 @@
       state.data.items.unshift(newItem);
     }
 
-    saveData();
     renderAdminItemsList();
-    showToast("آیتم با موفقیت در پایگاه‌داده ذخیره شد ✨");
-    switchTab('manage');
-    resetItemForm();
+    const saved = await saveData();
+    if (saved) {
+      switchTab('manage');
+      resetItemForm();
+    }
   }
 
   function resetItemForm() {

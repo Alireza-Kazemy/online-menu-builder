@@ -58,29 +58,33 @@ if ($method === 'GET') {
     header('Pragma: no-cache');
     header('Expires: 0');
 
-    try {
-        $db = MenuDatabase::getInstance();
-        $menuData = $db->getMenuData();
+    if (extension_loaded('pdo_sqlite')) {
+        try {
+            $db = MenuDatabase::getInstance();
+            $menuData = $db->getMenuData();
 
-        echo json_encode($menuData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        exit;
-    } catch (Exception $e) {
-        // Fallback to JSON file if SQLite has any transient issue
-        if (file_exists(DATA_FILE)) {
-            $content = file_get_contents(DATA_FILE);
-            if (!empty($content)) {
-                echo $content;
-                exit;
-            }
+            echo json_encode($menuData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            exit;
+        } catch (Throwable $e) {
+            error_log("SQLite GET error: " . $e->getMessage());
         }
-
-        http_response_code(500);
-        echo json_encode([
-            'success' => false,
-            'error' => 'خطا در بارگذاری اطلاعات از دیتابیس: ' . $e->getMessage()
-        ], JSON_UNESCAPED_UNICODE);
-        exit;
     }
+
+    // Fallback to JSON file if SQLite has any transient issue or extension is not loaded
+    if (file_exists(DATA_FILE)) {
+        $content = file_get_contents(DATA_FILE);
+        if (!empty($content)) {
+            echo $content;
+            exit;
+        }
+    }
+
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'error' => 'خطا در بارگذاری اطلاعات: پایگاه داده یا فایل داده در دسترس نیست.'
+    ], JSON_UNESCAPED_UNICODE);
+    exit;
 }
 
 // ==========================================
@@ -292,24 +296,47 @@ if ($method === 'POST') {
 
     unset($menuDataToSave['adminPassword']);
 
-    try {
-        $db = MenuDatabase::getInstance();
-        $db->saveMenuData($menuDataToSave, true);
+    $savedToDb = false;
+    $dbError = null;
 
+    if (extension_loaded('pdo_sqlite')) {
+        try {
+            $db = MenuDatabase::getInstance();
+            $db->saveMenuData($menuDataToSave, true);
+            $savedToDb = true;
+        } catch (Throwable $e) {
+            $dbError = $e->getMessage();
+            error_log("SQLite Save Error: " . $dbError);
+        }
+    }
+
+    if ($savedToDb) {
         echo json_encode([
             'success' => true,
-            'message' => 'تغییرات با موفقیت مستقیماً در پایگاه داده (SQLite) ثبت شد و برای تمامی کاربران اعمال گردید.',
+            'message' => 'تغییرات با موفقیت در پایگاه داده (SQLite) و فایل پشتیبان ثبت شد.',
             'timestamp' => time()
         ], JSON_UNESCAPED_UNICODE);
         exit;
-    } catch (Exception $e) {
-        http_response_code(500);
+    }
+
+    // Fallback: Save directly to JSON file if SQLite extension is not loaded or encountered an error
+    $jsonEncoded = json_encode($menuDataToSave, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    if ($jsonEncoded !== false && @file_put_contents(DATA_FILE, $jsonEncoded, LOCK_EX) !== false) {
         echo json_encode([
-            'success' => false,
-            'message' => 'خطا در ثبت اطلاعات در دیتابیس: ' . $e->getMessage()
+            'success' => true,
+            'message' => 'تغییرات با موفقیت در فایل داده منو ثبت گردید.' . ($dbError ? ' (هشدار درایور دیتابیس: ' . $dbError . ')' : ''),
+            'timestamp' => time(),
+            'fallback' => true
         ], JSON_UNESCAPED_UNICODE);
         exit;
     }
+
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'message' => 'خطا در ثبت اطلاعات در دیتابیس و فایل: ' . ($dbError ?? 'امکان ذخیره‌سازی داده وجود ندارد.')
+    ], JSON_UNESCAPED_UNICODE);
+    exit;
 }
 
 // Any other method
